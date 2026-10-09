@@ -11,7 +11,9 @@ Define a small, testable integration path for the Independent Android AI Agent. 
 
 ## 2. Current baseline
 
-The known Unity prototype contains a task input, send/stop controls, status text, and response text. Its task flow is currently a demo and does not execute an external action. A local model has answered a separate text test, but Unity-to-Ollama communication has not been verified.
+The Unity prototype contains a task input, send/stop controls, status text, and response text. A text request from Unity to the local Ollama API using `llama3.1:8b` has been demonstrated on the development PC, and the actual model response was displayed in the Unity UI.
+
+This verifies the basic text request-response path only. Android deployment, device-to-PC connectivity, systematic failure handling, cancellation semantics, and execution of external actions have not been established by this test.
 
 This document is a proposal. It does not imply that any component below has already been implemented.
 
@@ -95,14 +97,13 @@ Model output is untrusted text, not executable authority.
 
 ## 8. Acceptance criteria for v0.1
 
-The draft is ready to guide implementation when the following are demonstrated:
-
-- [ ] A request succeeds against the local Ollama API outside Unity.
-- [ ] Unity sends a prompt to that same API.
-- [ ] Unity displays the real model response rather than a demo placeholder.
-- [ ] Invalid input and connection/API errors are shown clearly.
-- [ ] The UI does not claim that generated text equals executed action.
-- [ ] The tested endpoint and model name are recorded in project notes without storing secrets.
+- [x] A request succeeds against the local Ollama API outside Unity.
+- [x] Unity sends a prompt to that same API.
+- [x] Unity displays the real model response rather than a demo placeholder.
+- [ ] Invalid input and connection/API errors are systematically tested and shown clearly.
+- [ ] Timeout, duplicate-request, and cancellation behavior are tested.
+- [ ] The UI wording is verified to distinguish generated text from an executed action.
+- [x] The tested endpoint and model name are recorded in project notes: `http://localhost:11434`, `llama3.1:8b`.
 
 ## 9. Out of scope
 
