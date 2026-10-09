@@ -2,11 +2,13 @@
 
 **Status date:** 2026-10-09
 **Project:** Independent Android AI Agent
-**Status confidence:** Unity-to-Ollama text request-response has been demonstrated on the development PC. Android deployment and agent actions remain unverified.
+**Status confidence:** Unity-to-Ollama text request-response and several manual client failure/stop checks have been demonstrated on the development PC. Android deployment and agent actions remain unverified.
 
 ## Current summary
 
-The project has progressed beyond the initial Unity UI spike. The Unity prototype sends a prompt to the local Ollama API using `llama3.1:8b` and displays the actual model response.
+The Unity prototype sends a prompt to the local Ollama API using `llama3.1:8b` and displays the actual model response. The user confirmed that Unity has no compile errors after the model-client error-handling update and that the response still arrives.
+
+Manual checks reported by the user passed for empty input, stopping during generation, and showing a connection error when Ollama is unavailable. The duplicate/overlapping-submission case was not meaningfully stress-tested because the model responds too quickly; do not treat it as fully verified.
 
 This milestone demonstrates text generation through the Unity-to-Ollama integration. It does not demonstrate Android deployment, autonomous planning, or execution of external actions.
 
@@ -17,8 +19,10 @@ This milestone demonstrates text generation through the Unity-to-Ollama integrat
 - The prototype UI includes task text input, **SEND TASK**, **STOP**, a status label, and a response label.
 - Ollama is installed on the development PC and exposes its local API at `http://localhost:11434`.
 - The Unity prototype sends a request to the Ollama generation API using model `llama3.1:8b`.
-- A real response from the model was received and displayed in Unity; the user confirmed that there were no errors.
+- A real response from the model was received and displayed in Unity; the user confirmed that there were no compile errors and a response was received after the client update.
 - A separate local-model test returned: `Да, я готов помочь в разработке Android AI-агента.`
+- User-reported manual checks passed: empty prompt handling, pressing STOP during generation, and the connection-error path with Ollama stopped.
+- The overlapping/duplicate-submission test could not be meaningfully exercised because generation completes too quickly; no rigorous stress test has been recorded.
 - The documentation repository is cloned locally at `C:\Users\max\Documents\Projects\independent-android-ai-agent`, with `origin` pointing to the project's GitHub repository.
 
 ## Not yet verified
@@ -26,19 +30,22 @@ This milestone demonstrates text generation through the Unity-to-Ollama integrat
 - Android build and runtime behavior.
 - Android device connectivity to Ollama hosted on the development PC.
 - On-device model inference.
-- Reliable cancellation of an in-flight generation request and whether server-side inference stops.
-- Systematic timeout, connection failure, HTTP error, and malformed-response testing.
+- Whether cancellation stops server-side inference; the manual check only confirms the user-facing stop behavior.
+- Timeout, HTTP error, and malformed-response paths under systematic test.
+- Duplicate/overlapping request behavior under a meaningful stress test.
 - Execution of real agent tools or external actions.
 - Permissions, safe tool execution, persistent agent memory, or autonomous multi-step behavior.
+- Whether all Android Build Support components are installed and correctly configured; this has not yet been confirmed in the project workflow.
 
 ## Current direction
 
 1. Continue with Ollama and the manageable `llama3.1:8b` model; postpone troubleshooting the larger model.
-2. Treat the working Unity-to-Ollama text cycle as the first demonstrated integration milestone.
-3. Review the model client's endpoint configuration, timeout behavior, error reporting, and cancellation semantics.
-4. Test failure cases before considering the first Android deployment.
-5. Decide and document the Android deployment topology separately: on-device inference versus a phone connecting to a model server on the development PC.
-6. Keep the prototype honest: generated text must not be described as an executed action unless an observable action actually occurred.
+2. Preserve the working Unity-to-Ollama text cycle.
+3. Treat the user-reported empty-input, stop, and connection-failure checks as manual checks, not a complete automated test suite.
+4. Next: inspect Unity Build Profiles / Build Settings, confirm Android is available, and verify that the prototype scene is included.
+5. Then build and launch a first Android APK, recording any build errors before changing network settings.
+6. After local Android runtime is confirmed, configure and test phone-to-PC connectivity to Ollama. On Android, `localhost` refers to the phone, not the development PC.
+7. Keep the prototype honest: generated text must not be described as an executed action unless an observable action actually occurred.
 
 ## Current milestone
 
@@ -46,23 +53,26 @@ This milestone demonstrates text generation through the Unity-to-Ollama integrat
 
 **Observed result:** Successful on the development PC with `llama3.1:8b`.
 
-**Remaining validation:**
-- Test empty input and relevant API/model errors.
-- Verify timeout and cancellation behavior.
-- Confirm endpoint and model configuration are maintainable.
-- Verify the integration in an Android build.
+**Manual checks reported as passed:**
+- Empty input handling.
+- User-facing stop behavior during generation.
+- Connection-error feedback when Ollama is unavailable.
+
+**Not fully verified:**
+- Duplicate/overlapping submission under stress (response is too fast for a meaningful manual test).
+- Server-side cancellation, systematic timeout/HTTP/JSON failure tests, and Android runtime.
 
 ## Next milestone
 
-**Milestone:** Harden and validate the Unity model client before Android deployment.
+**Milestone:** Verify Android build readiness and produce a first test APK.
 
 **Acceptance criteria:**
-- The configured endpoint and exact model tag are documented.
-- Empty prompts are rejected.
-- Connection, timeout, HTTP, and response parsing failures are handled clearly.
-- Duplicate submissions and cancellation behavior are tested.
-- The UI distinguishes text generation from execution of an external action.
-- Android connectivity assumptions are documented and tested before claiming device support.
+- Android is available as a build target in the installed Unity Editor.
+- Android Build Support, Android SDK & NDK Tools, and OpenJDK are confirmed in Unity Hub.
+- The intended prototype scene is included in the build.
+- A test APK builds successfully and launches on an Android device or emulator.
+- Ollama connectivity is tested separately from basic APK startup.
+- The phone-to-PC network configuration is deliberate and does not expose Ollama to the public internet.
 
 ## Source of truth and update rule
 
