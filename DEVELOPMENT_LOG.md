@@ -28,3 +28,12 @@
 - This proves Unity rejects the HTTP request under its Player Settings policy before a connection to Ollama is attempted. It does not yet prove that emulator-to-host networking works.
 - Next action: in Unity open Edit → Project Settings → Player → Android → Other Settings → Configuration; set **Allow downloads over HTTP** to **Always Allowed** for this local development prototype (HTTP is unencrypted), rebuild/reinstall, and test once more.
 - If the error changes, capture fresh logcat and diagnose the new failure. Do not claim the integration works until the app displays a response from Ollama.
+
+
+## 2026-10-10 — Listener and Android shell checks
+
+- `adb shell` opened successfully. Android emulator shell does not include `curl` (`/system/bin/sh: curl: inaccessible or not found`), so no emulator HTTP request was actually made.
+- `Test-NetConnection 10.0.2.2 -Port 11434` was run from Windows; it is not a valid test of emulator-to-host reachability because it runs on the host.
+- `netstat -ano | findstr :11434` showed listeners at `0.0.0.0:11434` and `[::]:11434` under PID 17632, and `127.0.0.1:11434` under PID 19544. These PIDs must be identified before changing anything.
+- The user reports the app request hangs. A filtered logcat query returned no matching lines; capture broader fresh logs after reproducing before deciding whether the HTTP-policy exception remains.
+- Next PowerShell diagnostic: `Get-Process -Id 17632,19544`.
