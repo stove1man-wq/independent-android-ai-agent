@@ -2,7 +2,7 @@
 
 **Status date:** 2026-10-10  
 **Project:** Independent Android AI Agent  
-**Status confidence:** Windows Ollama API is verified. Android APK logcat has identified the immediate blocker: Unity Player Settings prohibit insecure HTTP connections. The endpoint has not yet been reached; fix the HTTP policy for this local prototype, rebuild, and retest.
+**Status confidence:** Windows Ollama API is verified. Android logcat previously identified Unity's insecure-HTTP policy as the immediate blocker. After the attempted settings change, the request still hangs and a filtered log query returned no matching lines. Windows `netstat` shows port 11434 listening on `0.0.0.0` and `::` under PID 17632, plus `127.0.0.1` under PID 19544; process identity and the current Android error still need verification.
 
 ## Current summary
 
@@ -18,7 +18,7 @@ Ollama was also configured to listen on network interfaces rather than only its 
 
 On Windows, both `http://localhost:11434/api/tags` and `http://127.0.0.1:11434/api/tags` return the installed model list. A non-streaming `/api/generate` request to `llama3.1:8b` returned `"response":"OLLAMA_OK"` and `"done":true`.
 
-**Current blocker (root cause identified):** Android logcat shows `Non-secure network connections disabled in Player Settings` followed by `InvalidOperationException: Insecure connection not allowed` when `UnityWebRequest.SendWebRequest()` runs. Unity is rejecting the `http://10.0.2.2:11434/api/generate` request before a network connection is attempted. The next action is to allow HTTP in Unity Player Settings for this local development prototype, rebuild/reinstall the APK, and retest. If the error changes, diagnose the new error rather than assuming connectivity is fixed.
+**Current blocker:** Android request hangs with no response. A previous logcat capture showed Unity blocking HTTP (`Non-secure network connections disabled in Player Settings` / `InvalidOperationException: Insecure connection not allowed`), but a later filtered log query returned no lines, so the current failure is not yet confirmed. `netstat -ano | findstr :11434` shows listeners on `0.0.0.0:11434` (PID 17632), `[::]:11434` (PID 17632), and `127.0.0.1:11434` (PID 19544). This does not by itself establish which process serves Ollama or whether the emulator can connect.
 
 ## Verified observations
 
@@ -38,22 +38,21 @@ On Windows, both `http://localhost:11434/api/tags` and `http://127.0.0.1:11434/a
 ## Current blocker and unknowns
 
 - The exact error shown by the Android app has not yet been captured in this conversation.
-- Emulator-to-host TCP connectivity on port 11434 has not yet been tested.
+- Emulator-to-host TCP connectivity on port 11434 has not yet been tested. Android shell has no `curl` executable (`curl: inaccessible or not found`).
 - ADB is not currently available as a bare command in PowerShell (`adb : The term 'adb' is not recognized`). This only indicates that adb is not on the current PATH; it does not mean the Android SDK or emulator is absent.
-- Ollama's actual listening address and Windows Firewall behavior have not yet been verified.
+- Windows listener addresses are now observed via `netstat`, but the PIDs have not yet been identified as Ollama or another process; Windows Firewall behavior is still unverified.
 - Android manifest Internet permission has not yet been inspected. The immediate observed rejection comes from Unity Player Settings' insecure-HTTP policy, before the request reaches Ollama.
 - It is not yet known whether the currently running APK contains the latest `10.0.2.2` endpoint change; confirm before assuming the installed binary matches the source.
 - Server-side cancellation, systematic timeout/HTTP/JSON failure tests, duplicate-request stress testing, agent tool execution, persistent memory, and autonomous multi-step behavior remain unverified.
 
 ## Current direction
 
-1. In Unity, open **Edit → Project Settings → Player → Android → Other Settings → Configuration** and set **Allow downloads over HTTP** to **Always Allowed** (wording/location may vary slightly by Unity version). This is for local prototype testing only because HTTP is unencrypted.
-2. Rebuild and reinstall the APK, then send one test request.
-3. Use the full SDK path `C:\\Users\\max\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe` to capture logcat if the request still fails.
-4. If the error changes, use the new error to test emulator-to-host connectivity and Ollama listener/firewall; do not assume success from removing the Unity HTTP-policy error alone.
-5. Inspect Android manifest Internet permission only if evidence points there.
+1. Identify listener PIDs 17632 and 19544 with `Get-Process -Id 17632,19544` in PowerShell before changing services or firewall.
+2. Capture fresh Unity logs after reproducing a single request, without relying only on narrow text filters.
+3. Confirm Unity's **Allow downloads over HTTP** setting is applied to the Android build; rebuild only if the installed APK predates that setting.
+4. Test emulator-to-host connectivity using a suitable Android-side tool or app because `curl` is absent from the emulator shell.
+5. If the current error points to networking, inspect Windows Firewall rules for the identified listener process. Do not expose Ollama to the public internet.
 6. Record the test outcome here and in the development log.
-7. Do not expose Ollama to the public internet; limit network access to the development environment.
 
 ## Current milestone
 
@@ -66,7 +65,7 @@ On Windows, both `http://localhost:11434/api/tags` and `http://127.0.0.1:11434/a
 - `llama3.1:8b` generation request returns `OLLAMA_OK`.
 
 **Not passed yet:**
-- Android app receives a response from Ollama. The immediate Unity HTTP-policy blocker is identified but not yet corrected or retested.
+- Android app receives a response from Ollama. A prior Unity HTTP-policy error was captured; current request hangs and requires fresh diagnosis.
 
 ## Source of truth and update rule
 
