@@ -10,6 +10,7 @@ Documentation and development history for the Unity-based Independent Android AI
 - [Progress and handoff](docs/PROGRESS.md) — verified state, blockers, and the next task.
 - [Android integration architecture v0.1](docs/architecture/android_integration_architecture_v0.1.md) — detailed prototype state and Android-to-Ollama diagnostic sequence.
 - [Development log](DEVELOPMENT_LOG.md) — dated diagnostic history.
+- [Unity documentation sync guide](docs/LOCAL_UNITY_SYNC.md) — safe preview/apply procedure for copying canonical docs into the local Unity project.
 
 ## Working principle
 
