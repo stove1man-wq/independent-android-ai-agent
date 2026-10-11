@@ -86,3 +86,13 @@
 2. Inspect Cline's Custom Instructions/Rules and project rule files (for example, `AGENTS.md`, `CLINE.md`, `.clinerules`) for any explicit prohibition on tool use. Do not delete or disable rules without reviewing their contents.
 3. Verify the actual custom Ollama base URL field value and the selected Plan Mode model.
 4. Do not install Unity MCP, change models/settings, or modify the project until the cause is better isolated.
+
+
+## Update — Ollama model inventory verified (2026-10-12)
+
+- The user ran `Invoke-RestMethod -Uri 'http://localhost:11434/api/tags' -Method Get | ConvertTo-Json -Depth 5` in PowerShell and provided the actual JSON response.
+- The Ollama API returned four installed models: `nomic-embed-text:latest`, `qwen2.5-coder:14b-instruct`, `qwen2.5-coder:1.5b-base`, and `llama3.1:8b`.
+- Ollama reported capabilities `completion`, `tools`, and `insert` for `qwen2.5-coder:14b-instruct`; `completion` and `tools` for `llama3.1:8b`; `completion` and `insert` for `qwen2.5-coder:1.5b-base`; and `embedding` for `nomic-embed-text:latest`.
+- This confirms the local Ollama API is reachable from the user's PowerShell session and these four models are installed. It does not confirm Cline tool-call execution.
+- A previous Cline attempt incorrectly queried `http://localhost:5000/models`; PowerShell reported connection failure. Do not treat that failed port-5000 query as evidence that Ollama or its models are unavailable.
+- Next: keep `qwen2.5-coder:14b-instruct` selected for now and isolate whether Cline can make a real read-only terminal tool call. Do not install Unity MCP or change models until this is confirmed.
