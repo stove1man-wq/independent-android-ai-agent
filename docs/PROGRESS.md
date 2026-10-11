@@ -67,3 +67,22 @@
 4. Begin with the single active task above: inspect the result of the read-only Cline tool-use preflight. Do not assume it has been run.
 5. Do not repeat passed steps unless evidence shows the environment or build has changed.
 6. At task end, update this file with evidence, exact checks, unresolved issues and one next step.
+
+## Update — Cline tool execution test (2026-10-12)
+
+- Cline Act Mode is configured with provider Ollama and model `qwen2.5-coder:14b-instruct`; request timeout is `300000` ms. “Use different models for Plan and Act modes” is enabled. The user reports Plan Mode settings are the same; this has not been independently verified from a screenshot.
+- The custom base URL option is checked; the actual field value remains uncertain because the earlier screenshot showed the default URL as placeholder text rather than a clearly entered value.
+- Cline auto-approval for Read, Edit, Commands, Web Fetch and MCP was visible in an earlier screenshot, and “Execute commands” was checked.
+- Three harmless command/tool tests were attempted in Cline, including `Write-Output 'CLINE_TOOL_TEST_OK'`. In each screenshot, Cline showed a `COMPLETED` status and a JSON-like proposed `run_commands` call, but no actual command output or tool execution result.
+- The model subsequently stated that it could not execute the command directly and asked the user to run it manually. The latest test screenshot again shows only the proposed `run_commands` arguments and no `CLINE_TOOL_TEST_OK` output.
+- Cline Output log around 2026-10-11 21:33:02Z records `Task usage: tokensIn=3899, tokensOut=74, cost=0`, followed by `VscodeSessionHost` logging the model's “unable to execute the command directly” response and `SdkController` logging `Agent turn completed`. A warning `Unhandled session event type: session_snapshot` also appears, but there is insufficient evidence to attribute the failure to that warning.
+- **Conclusion:** Cline tool execution with the current Ollama/Qwen configuration is **not confirmed**. A `COMPLETED` status is not evidence that the proposed command actually ran. No command output was observed.
+- No project files, Unity settings, MCP configuration, or terminal profile were changed during these tests. The Default Terminal Profile setting remains `Default`.
+- Unity MCP remains uninstalled/unconfigured and must not be connected until tool execution is confirmed.
+
+## Next diagnostic step
+
+1. Inspect the Cline task history and/or Cline Output log around a fresh test to determine whether the model's proposed `run_commands` call is being emitted as plain text or registered as an actual tool call.
+2. Inspect Cline's Custom Instructions/Rules and project rule files (for example, `AGENTS.md`, `CLINE.md`, `.clinerules`) for any explicit prohibition on tool use. Do not delete or disable rules without reviewing their contents.
+3. Verify the actual custom Ollama base URL field value and the selected Plan Mode model.
+4. Do not install Unity MCP, change models/settings, or modify the project until the cause is better isolated.
