@@ -96,3 +96,12 @@
 - This confirms the local Ollama API is reachable from the user's PowerShell session and these four models are installed. It does not confirm Cline tool-call execution.
 - A previous Cline attempt incorrectly queried `http://localhost:5000/models`; PowerShell reported connection failure. Do not treat that failed port-5000 query as evidence that Ollama or its models are unavailable.
 - Next: keep `qwen2.5-coder:14b-instruct` selected for now and isolate whether Cline can make a real read-only terminal tool call. Do not install Unity MCP or change models until this is confirmed.
+
+
+## Update — Cline terminal tool confirmed (2026-10-12)
+
+- User provided a screenshot showing Cline's terminal running `Write-Output 'CLINE_TERMINAL_CONFIRMED'` in the project workspace.
+- The terminal content displayed the command and the output line `CLINE_TERMINAL_CONFIRMED`; Cline's result panel also reproduced that output and reported `TOOL_EXECUTION_CONFIRMED`.
+- Cline warned that shell integration could not capture output directly and showed the current terminal contents as a fallback. Therefore a basic read-only terminal execution is confirmed, while shell-integration output capture appears imperfect.
+- Combined with the verified successful PowerShell request to `http://localhost:11434/api/tags`, this confirms the user can reach Ollama from PowerShell and Cline can execute at least a simple terminal command. It does not yet prove that model tool-calling is working inside the agent loop.
+- Next: run one read-only Cline terminal request against `http://localhost:11434/api/tags` and require actual output, to verify the integrated command + API path. Keep `qwen2.5-coder:14b-instruct` selected. Do not install Unity MCP or change model/settings yet.
