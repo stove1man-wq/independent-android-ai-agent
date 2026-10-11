@@ -1,6 +1,6 @@
 # Project Progress and Handoff
 
-**Last evidence date:** 2026-10-10  
+**Last evidence date:** 2026-10-11
 **Current milestone:** Android APK launches in Android Emulator and attempts to connect to Ollama on the development PC.  
 **Overall milestone status:** In progress; end-to-end Android-to-Ollama response is not verified.
 
@@ -16,6 +16,9 @@
 - On Windows, `http://localhost:11434/api/tags` and `http://127.0.0.1:11434/api/tags` returned model data.
 - A non-streaming generation request to `llama3.1:8b` returned `OLLAMA_OK` and `done:true`.
 - A prior Android logcat capture reported `Non-secure network connections disabled in Player Settings` and `InvalidOperationException: Insecure connection not allowed`. A later filtered log query returned no matching lines, so the current failure must be captured again.
+- On 2026-10-11, `tools/Sync-ProjectDocsToUnity.ps1 -Apply` completed successfully, synchronizing `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DECISIONS.md`, `docs/PROGRESS.md`, and `docs/architecture/android_integration_architecture_v0.1.md` into the Unity project.
+- SHA-256 checksums of all five synchronized documents matched their Git repository originals after synchronization.
+- The sync script reported `Documentation sync completed. No files were deleted.`
 
 ## Not verified / open issues
 
