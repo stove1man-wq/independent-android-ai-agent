@@ -105,3 +105,15 @@
 - Cline warned that shell integration could not capture output directly and showed the current terminal contents as a fallback. Therefore a basic read-only terminal execution is confirmed, while shell-integration output capture appears imperfect.
 - Combined with the verified successful PowerShell request to `http://localhost:11434/api/tags`, this confirms the user can reach Ollama from PowerShell and Cline can execute at least a simple terminal command. It does not yet prove that model tool-calling is working inside the agent loop.
 - Next: run one read-only Cline terminal request against `http://localhost:11434/api/tags` and require actual output, to verify the integrated command + API path. Keep `qwen2.5-coder:14b-instruct` selected. Do not install Unity MCP or change model/settings yet.
+
+
+## Update — Cline terminal command queried Ollama (2026-10-12)
+
+- User reports the Cline request to query `http://localhost:11434/api/tags` displayed the four expected model names and capabilities:
+  - `nomic-embed-text:latest` — `embedding`
+  - `qwen2.5-coder:14b-instruct` — `completion, tools, insert`
+  - `qwen2.5-coder:1.5b-base` — `completion, insert`
+  - `llama3.1:8b` — `completion, tools`
+- However, Cline's own status was `TOOL_EXECUTION_NOT_CONFIRMED`. The output matches the previously user-run PowerShell API result, but this latest result alone does not independently confirm that Cline captured the output from the command execution. Treat the displayed data as consistent, while execution confirmation remains ambiguous.
+- The prior minimal `Write-Output 'CLINE_TERMINAL_CONFIRMED'` test did show the command and output in the terminal, with Cline reporting `TOOL_EXECUTION_CONFIRMED`, although it warned shell integration could not capture output directly and used terminal contents as fallback.
+- Current working hypothesis: terminal commands can run, but Cline's shell integration/output-capture status is inconsistent. Do not switch models or install Unity MCP yet. Next inspect Cline's command execution details and shell integration / terminal configuration, changing one variable only if evidence supports it.
