@@ -53,7 +53,7 @@ For the standard Android Emulator, `10.0.2.2` is the host machine alias. On Wind
 4. Verify Windows Firewall allows the intended emulator/host traffic.
 5. Test the path from the emulator to `10.0.2.2:11434`.
 6. Inspect Android Internet permission and cleartext HTTP policy if evidence points to an app manifest/network policy issue.
-7. Change one variable at a time and record each outcome in `DEVELOPMENT_LOG.md` and `PROJECT_STATUS.md`.
+7. Change one variable at a time and record each outcome in `DEVELOPMENT_LOG.md` and `docs/PROGRESS.md`.
 
 Do not rebuild the APK or change Unity graphics settings again unless diagnostics show a concrete reason.
 
