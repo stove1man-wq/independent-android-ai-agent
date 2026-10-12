@@ -1,6 +1,6 @@
 \# Independent Android AI Agent
 
-
+> **Примечание (D-006, 2026-10-12).** Концептуальная модель разрешений. Каноническое множество состояний разрешений и решений Safety Policy — в `docs/architecture/GLOSSARY.md` (разделы 2–3): `DENY`, `REQUIRE_CONFIRMATION`, `CONFIRM` соответствуют `BLOCK` и `ALLOW_WITH_CONFIRMATION`.
 
 \## Permission \& Security Model v0.1
 

@@ -1,5 +1,7 @@
 # Independent Android AI Agent — Safety & Permission Contract v0.1
 
+> **Статус: обзор, не нормативный (D-006, 2026-10-12).** Нормативный документ — `independent_android_ai_agent_safety_permission_contract_v0.1.md`. Термины — в `docs/architecture/GLOSSARY.md`. Известные расхождения: `web.search` — R1, а не R0; «переход транзакции в `REQUIRES_PERMISSION`» означает решение `WAIT_FOR_PERMISSION` (GLOSSARY, разделы 1 и 5).
+
 **Статус:** Архитектурный контракт (Baseline, pre-code)  
 **Версия:** 0.1  
 **Дата:** 2026-10-08  

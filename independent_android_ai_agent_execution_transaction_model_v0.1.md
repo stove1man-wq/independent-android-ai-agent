@@ -1,6 +1,6 @@
 \# Independent Android AI Agent
 
-
+> **Примечание (D-006, 2026-10-12).** Состояния транзакции — только перечисленные в этом документе. Доступность capability и состояние разрешения — другие понятия (`docs/architecture/GLOSSARY.md`, раздел 5).
 
 \## Execution Transaction Model v0.1
 

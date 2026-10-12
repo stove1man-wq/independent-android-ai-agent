@@ -1,8 +1,9 @@
 # Android Integration Architecture v0.1
 
-- **Status:** Prototype implemented; Android-to-host connectivity under investigation
+- **Status:** Prototype implemented; Android-to-host connectivity reported working by the owner (2026-10-12)
 - **Version:** 0.1
-- **Updated:** 2026-10-10
+- **Updated:** 2026-10-12
+- **Platform:** Unity 6000.6.5f1, C# (D-005)
 - **Scope:** First practical path from the Unity prototype to an Ollama model hosted on the development PC.
 
 ## 1. Purpose
@@ -11,17 +12,16 @@ Prove a narrow text request/response path from the Unity Android app to a model 
 
 ## 2. Current implementation and observed state
 
-- Unity project: `C:\Users\max\Documents\Projects\IndependentAgentUnitySpike\IndependentAgentUnitySpike`
+- Unity project (local path): `C:\Users\max\Documents\Projects\IndependentAgentUnitySpike\IndependentAgentUnitySpike` (planned: `unity/` in this repository, D-009)
 - UI/model-client prototype script: `Assets/Scripts/AgentPrototypeUI.cs`
 - Model: `llama3.1:8b`
 - Android API endpoint configured in the script:
   ```csharp
   private const string OllamaUrl = "http://10.0.2.2:11434/api/generate";
   ```
-- The Android APK was built and launched in Android Emulator; the UI is visible. Vulkan was removed from the graphics API list and OpenGLES3 retained after Vulkan caused a black screen.
-- The user reports configuring Ollama to listen on all/network interfaces.
-- Windows-local Ollama API is verified: `localhost:11434/api/tags` and `127.0.0.1:11434/api/tags` return model data, and a non-streaming generation request to `llama3.1:8b` returned `OLLAMA_OK`.
-- **Not yet working:** the Android app does not receive a response from Ollama. The emulator-to-host network path remains unverified.
+- The APK was built and launched in Android Emulator; the UI is visible. Vulkan was removed from the graphics API list and OpenGLES3 retained after Vulkan caused a black screen.
+- Windows-local Ollama API is verified (2026-10-10): `localhost:11434/api/tags` and `127.0.0.1:11434/api/tags` return model data, and a non-streaming generation request returned `OLLAMA_OK`.
+- **Reported by the owner (2026-10-12):** the app in the emulator reaches Ollama and works. No logs are stored; the cause of the earlier hang is not recorded. Cleartext HTTP in Unity is controlled by **Allow downloads over HTTP** in Player Settings (logcat on 2026-10-10 showed Unity rejecting insecure HTTP).
 
 ## 3. Request path
 
@@ -43,29 +43,17 @@ Ollama API on port 11434
 llama3.1:8b
 ```
 
-For the standard Android Emulator, `10.0.2.2` is the host machine alias. On Windows itself, `localhost` and `127.0.0.1` address the Windows host loopback interface. A successful Windows-local request does not prove that an emulator request can reach the API.
+For the standard Android Emulator, `10.0.2.2` is the host machine alias. For a physical phone use `adb reverse tcp:11434 tcp:11434` with `http://localhost:11434`, or the PC's LAN address (see D-008). The earlier step-by-step diagnostic sequence is kept in `DEVELOPMENT_LOG.md` as history.
 
-## 4. Diagnostic sequence for the current blocker
-
-1. Find the Android SDK location in Android Studio. If `adb` is not on PowerShell's PATH, invoke `<SDK>\platform-tools\adb.exe` by its full path.
-2. Capture the exact app error and Android logs (logcat).
-3. Verify the actual Ollama listener address and port 11434.
-4. Verify Windows Firewall allows the intended emulator/host traffic.
-5. Test the path from the emulator to `10.0.2.2:11434`.
-6. Inspect Android Internet permission and cleartext HTTP policy if evidence points to an app manifest/network policy issue.
-7. Change one variable at a time and record each outcome in `DEVELOPMENT_LOG.md` and `PROJECT_STATUS.md`.
-
-Do not rebuild the APK or change Unity graphics settings again unless diagnostics show a concrete reason.
-
-## 5. Responsibilities
+## 4. Responsibilities
 
 - **Unity UI:** collect a prompt, show progress and result, allow user-requested cancellation.
-- **Model client:** own endpoint configuration, request serialization, HTTP transport, timeouts, response parsing, and error reporting.
+- **Model client:** own endpoint configuration, request serialization, HTTP transport, timeouts, response parsing, and error reporting (D-007: separate from the UI).
 - **Ollama:** host the selected model and return generated text.
-- **Future agent coordinator:** interpret model output and request narrowly defined tools only through explicit, validated interfaces.
-- **Future Android capability layer:** expose only approved capabilities, with permissions and user confirmation where appropriate.
+- **Future agent coordinator (Core):** interpret model output and request narrowly defined tools only through explicit, validated interfaces.
+- **Future Android bridge:** expose only approved capabilities, with permissions and user confirmation where appropriate.
 
-## 6. Safety and trust boundaries
+## 5. Safety and trust boundaries
 
 - Model output is untrusted text, not executable authority.
 - Do not execute shell commands, arbitrary code, or Android actions directly from generated text.
@@ -73,19 +61,19 @@ Do not rebuild the APK or change Unity graphics settings again unless diagnostic
 - Ask for user confirmation before consequential or destructive actions.
 - Keep credentials and private data out of logs.
 - Do not expose the Ollama endpoint to the public internet as a shortcut for connectivity.
-- Distinguish “model generated a suggestion” from “the system performed an action.”
+- Distinguish "model generated a suggestion" from "the system performed an action."
 
-## 7. Acceptance criteria for the current Android connectivity milestone
+## 6. Acceptance criteria for the connectivity milestone
 
-- [x] Android APK builds and launches in Android Emulator.
+- [x] APK builds and launches in Android Emulator.
 - [x] Unity UI is visible in the emulator.
 - [x] Unity source is configured to call `http://10.0.2.2:11434/api/generate`.
 - [x] Windows-local Ollama API responds.
-- [ ] The emulator can reach Ollama on the host at port 11434.
-- [ ] The Android app receives and displays a real model response.
-- [ ] The connection setup is restricted to the intended development environment.
+- [x] The emulator can reach Ollama on the host at port 11434 (owner report, 2026-10-12).
+- [x] The Android app receives and displays a real model response (owner report, 2026-10-12).
+- [ ] The connection setup is restricted to the intended development environment (not verified; see D-008).
 
-## 8. Out of scope
+## 7. Out of scope
 
 - Fully autonomous operation.
 - Arbitrary device control.

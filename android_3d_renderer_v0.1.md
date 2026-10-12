@@ -1,5 +1,7 @@
 # Independent Android AI Agent — Android 3D Renderer Integration v0.1
 
+> **Статус: Superseded (D-005, 2026-10-12).** SceneView и Jetpack Compose не применяются: аватар реализуется в Unity. Требования к состояниям аватара — в `avatar_layer_architecture_v0.1.md`.
+
 **Статус:** Архитектурный контракт (Stage 3 — Final Production Setup)  
 **Версия:** 0.1  
 **Дата:** 2026-10-08  

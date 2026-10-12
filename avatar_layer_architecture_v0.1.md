@@ -1,5 +1,7 @@
 # Independent Android AI Agent — Persona & Avatar Layer v0.1
 
+> **Примечание (D-005, 2026-10-12).** Платформа — Unity. Интерфейс `AvatarRenderAdapter` реализуется в Unity; упоминания Filament и SceneView не применяются.
+
 **Статус:** Архитектурный контракт (Baseline, pre-code)  
 **Версия:** 0.1  
 **Дата:** 2026-10-08  

@@ -37,3 +37,32 @@
 - `netstat -ano | findstr :11434` showed listeners at `0.0.0.0:11434` and `[::]:11434` under PID 17632, and `127.0.0.1:11434` under PID 19544. These PIDs must be identified before changing anything.
 - The user reports the app request hangs. A filtered logcat query returned no matching lines; capture broader fresh logs after reproducing before deciding whether the HTTP-policy exception remains.
 - Next PowerShell diagnostic: `Get-Process -Id 17632,19544`.
+
+
+## 2026-10-12 — Platform decision and consistency pass
+
+### Owner input
+- The owner decided to develop in Unity (D-005, Accepted). Reported versions: Unity 6000.6.5f1, Android Studio 2026.2.1. Agents in VS Code: Cline and Continue.
+- The owner reports that the APK in the Android Emulator communicates with Ollama and works. No logs were provided and the cause of the earlier hang is not recorded. **Owner: add one line here saying what fixed it.**
+- The GitHub repository contains no Unity project folder; the project exists only at its local path (D-009 proposes `unity/`).
+
+### Changes made to the documentation
+- D-005 accepted; D-004 closed; D-002 updated; D-006 partly accepted; D-007, D-008, D-009 proposed (`DECISIONS.md`).
+- Kotlin shell documents marked Superseded or partly Superseded with a banner: `android_shell_architecture`, `android_modules_mapping`, `android_network_bridge`, `android_3d_renderer`; note added to `avatar_layer_architecture`. Nothing deleted.
+- Typo fixed in `android_network_bridge_v0.1.md`: `http://10.0.2` → `http://10.0.2.2`.
+- Contradictions between contracts resolved by `docs/architecture/GLOSSARY.md`, found by comparing the texts: risk level of `message.send` (R2 vs R3), `reminder.create` (R1 vs R2), `web.search` (R0 vs R1); permission state lists; Safety Policy decision names; two kinds of "confirmation"; three meanings of "state". Notes added to six contracts.
+- Agent rules: one `AGENTS.md` (shorter, Unity platform, versions); Continue is connected through its own rule file `.continue/rules/01-agent-tool-use.md`, which already says to follow `AGENTS.md`; commit rule aligned with the "update GitHub" rule (agent prepares, owner confirms); role of the architect moved to `docs/agent/ROLE_ARCHITECT.md`.
+- `PROJECT_STATUS.md`, `android_integration_architecture_v0.1.md`, `README.md`, `NEXT_STEPS.md`, `docs/DOCUMENT_MAP.md` updated.
+
+### Not changed
+- Contract texts themselves (only notes at the top), markup noise in four documents, folder structure.
+- No code was read or changed: the Unity project is not in the repository.
+
+### Found on the owner's PC (reported 2026-10-12)
+- The local checkout was on branch `diagnostic/disable-agent-instructions` (also on GitHub), two commits ahead of `main`: `AGENTS.md` renamed to `AGENTS.md.disabled` ("temporarily disable AGENTS.md for Continue tool check"). `main` is unchanged at `58c677c`. The result of that diagnostic is not recorded. **Owner: add one line, did disabling `AGENTS.md` fix Continue's tool use?**
+- Untracked, not touched: `.clinerules`, `.continue/`, `.vscode/extensions.json` (recommends the Cline extension), two `*.bak_20261009_101944` backups, three `continue_*_test.txt` files.
+- `.clinerules` says the current phase is "full isolation (Level 1: Isolated): no neural networks, Ollama or network APIs", and gives Cline the role of "IT architect". This contradicts `PROJECT_STATUS.md`, D-001, D-002 and `AGENTS.md`. The phrase "Level 1: Isolated" appears nowhere in the repository documents. Open question for the owner: planned phase or stale instruction.
+
+### Roles and agent–Unity link (owner, 2026-10-12)
+- Owner clarified: the architect is a senior model in a separate chat; Cline and Continue are executors. Recorded as D-010 (Accepted). `AGENTS.md` §1, `ROLE_ARCHITECT.md`, `SETUP_VSCODE.md` adjusted. `.clinerules` ("IT architect") now conflicts with D-010.
+- Added `docs/agent/UNITY_BRIDGE.md` and D-011 (Proposed): feedback levels L0/L1/L2 for the VS Code agent and Unity; milestone M0.2 in `NEXT_STEPS.md`. Based on Unity documentation and general knowledge; nothing run on the owner's PC.

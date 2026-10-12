@@ -1,5 +1,7 @@
 # Independent Android AI Agent — Capability Contract v0.1
 
+> **Примечание (D-006, 2026-10-12).** Политика подтверждения здесь (`NEVER_REQUIRED` … `POLICY_BLOCKED`) — объявление capability. Вычисленный уровень подтверждения для вызова — см. `docs/architecture/GLOSSARY.md`, раздел 4.
+
 **Статус:** архитектурный baseline, pre-code  
 **Версия:** 0.1  
 **Дата:** 2026-10-07  

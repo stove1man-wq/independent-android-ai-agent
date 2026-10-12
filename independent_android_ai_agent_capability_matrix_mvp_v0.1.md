@@ -1,5 +1,7 @@
 # Independent Android AI Agent — Capability Matrix MVP v0.1
 
+> **Примечание (D-006, 2026-10-12).** Эта таблица — единственный источник базового уровня риска capability (`docs/architecture/GLOSSARY.md`, раздел 1).
+
 **Статус:** архитектурный baseline, pre-code  
 **Версия:** 0.1  
 **Дата:** 2026-10-07

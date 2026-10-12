@@ -1,5 +1,7 @@
 # Independent Android AI Agent — Android Modules Mapping v0.1
 
+> **Статус: Superseded (D-005, 2026-10-12).** Структура пакетов Kotlin не применяется. Принцип сохраняется: ядро не зависит от платформенных API. Слои для Unity описаны в `DECISIONS.md` (D-005) и `AGENTS.md` (раздел 4).
+
 **Статус:** Архитектурный контракт (Baseline, Stage 3)  
 **Версия:** 0.1  
 **Дата:** 2026-10-08  

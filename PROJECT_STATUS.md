@@ -1,72 +1,52 @@
 # Project Status
 
-**Status date:** 2026-10-10  
-**Project:** Independent Android AI Agent  
-**Status confidence:** Windows Ollama API is verified. Android logcat previously identified Unity's insecure-HTTP policy as the immediate blocker. After the attempted settings change, the request still hangs and a filtered log query returned no matching lines. Windows `netstat` shows port 11434 listening on `0.0.0.0` and `::` under PID 17632, plus `127.0.0.1` under PID 19544; process identity and the current Android error still need verification.
+**Status date:** 2026-10-12
+**Project:** Independent Android AI Agent
+**Platform:** Unity 6000.6.5f1, C# (D-005)
 
 ## Current summary
 
-The Unity prototype was built as an Android APK and launched successfully in Android Emulator after changing the Graphics API configuration from Vulkan to OpenGLES3. The app UI is visible in the emulator.
+The Unity prototype was built as an Android APK and runs in Android Emulator (Android Studio 2026.2.1). The owner reports that the APK reaches Ollama on the development PC and works. The earlier connectivity problem is considered resolved.
 
-The Unity script `Assets/Scripts/AgentPrototypeUI.cs` was changed to use the Android Emulator host alias:
+**Confidence:** The connectivity result is reported by the owner on 2026-10-12. No logs or screenshots are stored in the repository, and what fixed the earlier hang is not recorded. Everything else about the agent (tools, memory, multi-step behaviour) is not implemented or not verified.
 
-```csharp
-private const string OllamaUrl = "http://10.0.2.2:11434/api/generate";
-```
+## Stack (as reported by the owner; confirm in project files)
 
-Ollama was also configured to listen on network interfaces rather than only its loopback interface. The exact persistence mechanism for that setting has not yet been re-verified in this session.
-
-On Windows, both `http://localhost:11434/api/tags` and `http://127.0.0.1:11434/api/tags` return the installed model list. A non-streaming `/api/generate` request to `llama3.1:8b` returned `"response":"OLLAMA_OK"` and `"done":true`.
-
-**Current blocker:** Android request hangs with no response. A previous logcat capture showed Unity blocking HTTP (`Non-secure network connections disabled in Player Settings` / `InvalidOperationException: Insecure connection not allowed`), but a later filtered log query returned no lines, so the current failure is not yet confirmed. `netstat -ano | findstr :11434` shows listeners on `0.0.0.0:11434` (PID 17632), `[::]:11434` (PID 17632), and `127.0.0.1:11434` (PID 19544). This does not by itself establish which process serves Ollama or whether the emulator can connect.
+| Component | Value |
+|---|---|
+| Unity | 6000.6.5f1 |
+| Android Studio | 2026.2.1 |
+| Android Graphics API | OpenGLES3 (Vulkan was removed after a black screen in the emulator) |
+| Model | Ollama on the development PC, `llama3.1:8b` |
+| Endpoint in the prototype | `http://10.0.2.2:11434/api/generate` |
+| Agents in VS Code | Cline, Continue |
 
 ## Verified observations
 
-- Unity project path: `C:\Users\max\Documents\Projects\IndependentAgentUnitySpike\IndependentAgentUnitySpike`.
+- Unity project (local path): `C:\Users\max\Documents\Projects\IndependentAgentUnitySpike\IndependentAgentUnitySpike`. It is **not yet in this repository** (planned location `unity/`, D-009).
 - Prototype script: `Assets/Scripts/AgentPrototypeUI.cs`.
-- Documentation repository: `C:\Users\max\Documents\Projects\independent-android-ai-agent`.
-- GitHub repository: `stove1man-wq/independent-android-ai-agent`.
-- The Unity prototype previously demonstrated a real text request/response with Ollama on the development PC using `llama3.1:8b`.
-- The Android APK was built and launched in Android Emulator; the UI is visible.
-- Vulkan caused a black screen in the emulator; the user removed Vulkan and left OpenGLES3, then rebuilt `Builds\IndependentAndroidAgent_Test.apk` and successfully launched it.
-- `AgentPrototypeUI.cs` was changed to use `http://10.0.2.2:11434/api/generate` for the Android Emulator.
-- Ollama was configured to listen on all/network interfaces (reported by the user); the exact current listener binding still needs direct verification.
-- On 2026-10-10, `curl.exe http://localhost:11434/api/tags` and `curl.exe http://127.0.0.1:11434/api/tags` both returned the installed models.
-- On 2026-10-10, a JSON file was posted to `http://localhost:11434/api/generate`; `llama3.1:8b` returned `OLLAMA_OK` with `done:true`.
-- User reports that the Android app still does not see/reach Ollama.
+- Documentation repository (local): `C:\Users\max\Documents\Projects\independent-android-ai-agent`; GitHub: `stove1man-wq/independent-android-ai-agent`.
+- The prototype showed a real text request/response with Ollama on the development PC using `llama3.1:8b`.
+- 2026-10-10: Windows `localhost:11434` and `127.0.0.1:11434` returned the model list; a non-streaming `/api/generate` request returned `OLLAMA_OK` with `done:true`.
+- 2026-10-10: logcat showed Unity rejecting insecure HTTP (`Non-secure network connections disabled in Player Settings`). The cleartext setting is **Allow downloads over HTTP** in Player Settings.
+- Reported by the owner, 2026-10-12: the APK in the emulator communicates with Ollama and works.
 
-## Current blocker and unknowns
+## Unknown or not verified
 
-- The exact error shown by the Android app has not yet been captured in this conversation.
-- Emulator-to-host TCP connectivity on port 11434 has not yet been tested. Android shell has no `curl` executable (`curl: inaccessible or not found`).
-- ADB is not currently available as a bare command in PowerShell (`adb : The term 'adb' is not recognized`). This only indicates that adb is not on the current PATH; it does not mean the Android SDK or emulator is absent.
-- Windows listener addresses are now observed via `netstat`, but the PIDs have not yet been identified as Ollama or another process; Windows Firewall behavior is still unverified.
-- Android manifest Internet permission has not yet been inspected. The immediate observed rejection comes from Unity Player Settings' insecure-HTTP policy, before the request reaches Ollama.
-- It is not yet known whether the currently running APK contains the latest `10.0.2.2` endpoint change; confirm before assuming the installed binary matches the source.
-- Server-side cancellation, systematic timeout/HTTP/JSON failure tests, duplicate-request stress testing, agent tool execution, persistent memory, and autonomous multi-step behavior remain unverified.
-
-## Current direction
-
-1. Identify listener PIDs 17632 and 19544 with `Get-Process -Id 17632,19544` in PowerShell before changing services or firewall.
-2. Capture fresh Unity logs after reproducing a single request, without relying only on narrow text filters.
-3. Confirm Unity's **Allow downloads over HTTP** setting is applied to the Android build; rebuild only if the installed APK predates that setting.
-4. Test emulator-to-host connectivity using a suitable Android-side tool or app because `curl` is absent from the emulator shell.
-5. If the current error points to networking, inspect Windows Firewall rules for the identified listener process. Do not expose Ollama to the public internet.
-6. Record the test outcome here and in the development log.
+- What exactly fixed the earlier hang. Owner to record it in `DEVELOPMENT_LOG.md`.
+- Server-side cancellation, timeouts, HTTP and JSON error handling, duplicate-request behaviour.
+- Whether the Ollama listener is bound to loopback or `0.0.0.0` today (D-008).
+- Result of the diagnostic branch `diagnostic/disable-agent-instructions` (Continue tool use without `AGENTS.md`), and whether `.clinerules` ("Level 1: Isolated", no Ollama) is current. See `DEVELOPMENT_LOG.md`, 2026-10-12.
+- Link between the VS Code agent and the Unity editor (Editor.log reading, batchmode tests, Unity MCP): proposed in D-011, nothing tested (`docs/agent/UNITY_BRIDGE.md`).
+- Agent tool execution, persistent memory, autonomous multi-step behaviour: not implemented.
+- Native Android capabilities from Unity (calendar, permissions, service, overlay): not tested (spike M1).
 
 ## Current milestone
 
-**Milestone:** Android APK launches in the emulator and attempts to connect to a PC-hosted Ollama model.
+**Passed (owner-reported):** APK launches in the emulator and gets a response from PC-hosted Ollama.
 
-**Passed:**
-- APK builds and launches in Android Emulator.
-- Unity UI is visible.
-- Windows Ollama API responds on localhost and 127.0.0.1.
-- `llama3.1:8b` generation request returns `OLLAMA_OK`.
-
-**Not passed yet:**
-- Android app receives a response from Ollama. A prior Unity HTTP-policy error was captured; current request hangs and requires fresh diagnosis.
+**Next:** see `NEXT_STEPS.md`. Order: M0 (baseline and repository order), M0.1, M0.2 (agent–Unity link, L1), M1 (Unity to Android bridge spike), M2 (first vertical slice).
 
 ## Source of truth and update rule
 
-Use this document for the latest verified project state. Update it when a milestone is demonstrated, not merely planned. Record architectural choices and their rationale in `DECISIONS.md`; record dated work and test outcomes in `DEVELOPMENT_LOG.md`. At each meaningful development step, update GitHub before moving to the next step.
+This document holds the latest verified project state. Update it when a milestone is demonstrated, not merely planned. Record decisions in `DECISIONS.md` and dated work and test outcomes in `DEVELOPMENT_LOG.md`. After each meaningful step the agent prepares a commit; the owner confirms the commit and the push (`AGENTS.md` §10).

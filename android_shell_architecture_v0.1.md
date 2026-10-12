@@ -1,5 +1,7 @@
 # Independent Android AI Agent — Android Shell Architecture v0.1
 
+> **Статус: частично Superseded (D-005, 2026-10-12).** Платформа проекта — Unity (C#). Разделы 2 и 5 (Kotlin, Compose, Filament, перенос ядра на Kotlin) не применяются. Разделы 1, 3 и 4 (системные роли Android, оверлей, foreground-сервис, раскладка интерфейса, EMERGENCY STOP) остаются требованиями. См. `DECISIONS.md`, D-005.
+
 **Статус:** Архитектурный контракт (Baseline, Stage 3)  
 **Версия:** 0.1  
 **Дата:** 2026-10-08  

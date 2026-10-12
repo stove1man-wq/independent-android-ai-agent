@@ -1,4 +1,7 @@
 # Independent Android AI Agent
+
+> **Нормативный документ по политике безопасности (D-006, 2026-10-12).** Общие термины: `docs/architecture/GLOSSARY.md`. Базовый уровень риска capability задаёт `independent_android_ai_agent_capability_matrix_mvp_v0.1.md`; примеры в этом документе иллюстративны (в частности, `message.send` — R3, `reminder.create` — R2).
+
 ## Safety & Permission Contract v0.1
 
 **Версия:** 0.1  
