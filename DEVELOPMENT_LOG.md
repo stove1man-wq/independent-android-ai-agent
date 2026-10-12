@@ -66,3 +66,8 @@
 ### Roles and agent–Unity link (owner, 2026-10-12)
 - Owner clarified: the architect is a senior model in a separate chat; Cline and Continue are executors. Recorded as D-010 (Accepted). `AGENTS.md` §1, `ROLE_ARCHITECT.md`, `SETUP_VSCODE.md` adjusted. `.clinerules` ("IT architect") now conflicts with D-010.
 - Added `docs/agent/UNITY_BRIDGE.md` and D-011 (Proposed): feedback levels L0/L1/L2 for the VS Code agent and Unity; milestone M0.2 in `NEXT_STEPS.md`. Based on Unity documentation and general knowledge; nothing run on the owner's PC.
+
+### Sync and executor problem (owner, 2026-10-12)
+- Package v3 applied on the owner's PC and pushed: `main` = `2af09b7`. The commit also swept in files that were already staged: `.clinerules`, `.continue/rules/01-agent-tool-use.md`, `.vscode/extensions.json`, three `continue_*_test.txt`, two `*.bak_20261009_101944`. A follow-up commit removing the test files and backups from tracking was proposed.
+- `.clinerules` replaced by a two-line pointer to `AGENTS.md` (executor, not architect, D-010).
+- Owner reports that Cline does not create new files and does not write code into existing ones. Cause not established. Hypotheses (mode Plan, missing approval, context below 32K, Compact Prompt off, model without reliable tool calling) and a one-variable test are in `docs/agent/SETUP_VSCODE.md` §1a. Not yet tested.

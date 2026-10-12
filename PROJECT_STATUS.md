@@ -36,8 +36,9 @@ The Unity prototype was built as an Android APK and runs in Android Emulator (An
 - What exactly fixed the earlier hang. Owner to record it in `DEVELOPMENT_LOG.md`.
 - Server-side cancellation, timeouts, HTTP and JSON error handling, duplicate-request behaviour.
 - Whether the Ollama listener is bound to loopback or `0.0.0.0` today (D-008).
-- Result of the diagnostic branch `diagnostic/disable-agent-instructions` (Continue tool use without `AGENTS.md`), and whether `.clinerules` ("Level 1: Isolated", no Ollama) is current. See `DEVELOPMENT_LOG.md`, 2026-10-12.
+- Result of the diagnostic branch `diagnostic/disable-agent-instructions` (Continue tool use without `AGENTS.md`), and the diagnostic result is still unreported. `.clinerules` was replaced with a pointer to `AGENTS.md` on 2026-10-12. See `DEVELOPMENT_LOG.md`, 2026-10-12.
 - Link between the VS Code agent and the Unity editor (Editor.log reading, batchmode tests, Unity MCP): proposed in D-011, nothing tested (`docs/agent/UNITY_BRIDGE.md`).
+- Why Cline (Ollama, `llama3.1:8b`) does not create or edit files: unresolved. Hypotheses and checks are in `docs/agent/SETUP_VSCODE.md` §1a.
 - Agent tool execution, persistent memory, autonomous multi-step behaviour: not implemented.
 - Native Android capabilities from Unity (calendar, permissions, service, overlay): not tested (spike M1).
 
